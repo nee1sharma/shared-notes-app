@@ -53,9 +53,9 @@ Ensure you have the Android SDK installed and a device/emulator connected.
 
 ### GitHub Actions & Releases
 This repository is configured with GitHub Actions to automate the build and release process:
-- **Continuous Integration:** Every push or pull request to `main` triggers a build to verify code integrity.
-- **Automated Releases:** Pushing a tag starting with `v` (e.g., `v1.0.0`) automatically creates a GitHub Release and attaches the generated APK file.
-- **Artifacts:** The debug APK is also available as a build artifact in the GitHub Actions tab for every successful build.
+- **Continuous Integration:** Every push or pull request to `main` triggers a build of the **release** variant to verify code integrity.
+- **Automated Releases:** Pushing a tag starting with `v` (e.g., `v1.0.0`) automatically creates a GitHub Release and attaches the generated **Release APK**.
+- **Artifacts:** The release APK is also available as a build artifact in the GitHub Actions tab for every successful build.
 
 ## Security & Sensitive Data
 
