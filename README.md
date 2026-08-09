@@ -1,6 +1,6 @@
-# SharedNoteBook (Android App)
+# NetBook (Android App)
 
-SharedNoteBook is a secure, peer-to-peer note-taking system designed to prioritize user privacy and familiar note-editing experiences. This repository contains the Android application, which works in conjunction with a designated laptop control plane.
+NetBook is a secure, peer-to-peer note-taking system for people on the same local network, designed to prioritize user privacy and familiar note-editing experiences. This repository contains the Android application, which works in conjunction with a designated laptop control plane.
 
 ## Key Features
 
@@ -21,7 +21,7 @@ SharedNoteBook is a secure, peer-to-peer note-taking system designed to prioriti
 ## Getting Started
 
 ### 1. Prerequisite: Control Plane
-The Android app requires a running SharedNoteBook Control Plane on your local network to handle device registration and global synchronization.
+The Android app requires a running NetBook Control Plane on your local network to handle device registration and global synchronization.
 - Ensure the control plane is active and advertising via mDNS.
 
 ### 2. Install and Register the App

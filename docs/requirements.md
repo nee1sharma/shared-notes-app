@@ -1,4 +1,4 @@
-# SharedNoteBook Requirements
+# NetBook Requirements
 
 **Document status:** Product baseline with laptop control-plane decisions  
 **Last updated:** 2026-08-09  
@@ -6,7 +6,7 @@
 
 ## 1. Product definition
 
-SharedNoteBook consists of local-first Android member applications and a stateful laptop control plane. Family members use Android for private and shared notes. The designated admin laptop runs the Java Spring Boot backend, PostgreSQL, discovery/registry service, and web companion. Administrators use the web companion for privileged operations, device oversight, policy management, shared-note deletion, and audit visualization.
+NetBook consists of local-first Android member applications and a stateful laptop control plane. Family members on the same network use Android for private and shared notes. The designated admin laptop runs the Java Spring Boot backend, PostgreSQL, discovery/registry service, and web companion. Administrators use the web companion for privileged operations, device oversight, policy management, shared-note deletion, and audit visualization.
 
 Shared data is stored on registered Android devices and as a complete durable replica in PostgreSQL on the admin laptop. Android devices continue to synchronize peer-to-peer when they can reach one another on the same local-area network (LAN). The laptop reconciles its database with peers whenever the backend is available.
 
@@ -213,7 +213,7 @@ Attachments, drawing, audio, video, and rich-text collaboration are outside the 
 
 - **FR-080:** The web companion's admin area shall have a page listing all household devices and their registration state.
 - **FR-081:** For each device, the admin page shall show member name, device name, role, registration time, last-seen time, and reachable/offline/blocked/revoked state when known.
-- **FR-081A:** Android device identity shall come from authenticated registration and shall include the registered member name, editable device name, application name `SharedNoteBook Android`, manufacturer/model, platform, and stable short identifier.
+- **FR-081A:** Android device identity shall come from authenticated registration and shall include the registered member name, editable device name, application name `NetBook Android`, manufacturer/model, platform, and stable short identifier.
 - **FR-081B:** A device shall be presented as connected only while its latest authenticated presence is inside the configured heartbeat window; otherwise it shall be offline with its last-seen time.
 - **FR-081C:** Neither Android nor web builds shall seed or display fabricated household devices, member names, activity, note records, or presence counts.
 - **FR-082:** An authenticated web admin shall be able to view recent shared-note access and synchronization activity attributable to a device.
@@ -549,7 +549,7 @@ The following decisions are settled:
 - The backend runs on the designated admin laptop.
 - The backend uses Spring Boot, is stateful, and keeps the complete shared household dataset in PostgreSQL.
 - The repository currently uses Spring Boot 4.1 and Java 25; the supported baseline is Java 21 or newer.
-- Frontend and backend live in `/Users/hitstudio/Learnings/shared-notebook`.
+- Frontend and backend live in the NetBook companion repository.
 - No web unit tests are required.
 - The browser requires no PWA, extension, or desktop-app installation.
 - Accepted web devices reconnect without repeated approval.

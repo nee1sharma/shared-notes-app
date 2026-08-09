@@ -1,5 +1,5 @@
 <resources>
-    <style name="Theme.SharedNoteBook" parent="Base.Theme.SharedNoteBook">
+    <style name="Theme.NetBook" parent="Base.Theme.NetBook">
         <item name="android:windowLightStatusBar">false</item>
     </style>
 </resources>

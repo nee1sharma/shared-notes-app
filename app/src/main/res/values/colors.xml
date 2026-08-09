@@ -2,7 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="ic_launcher_background">#6650A4</color>
+    <color name="ic_launcher_background">#D6EBED</color>
     <color name="notebook_primary">#386A74</color>
     <color name="notebook_on_primary">#FFFFFFFF</color>
     <color name="notebook_primary_container">#BCEBF4</color>

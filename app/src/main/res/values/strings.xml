@@ -1,6 +1,5 @@
 <resources>
-    <string name="app_name">SharedNoteBook</string>
-    <string name="enter">Enter</string>
+    <string name="app_name">NetBook</string>
     <string name="my_notes">My notes</string>
     <string name="note_count">%1$d %2$s</string>
     <string name="note_singular">note</string>
@@ -28,20 +27,23 @@
     <string name="join_household_title">Find or Join Household</string>
     <string name="join_household">Join Household</string>
     <string name="open_navigation_drawer">Open navigation drawer</string>
-    <string name="navigation_header">Shared notebook</string>
+    <string name="navigation_header">NetBook</string>
     <string name="navigation_subtitle">Notes on your local network</string>
     <string name="settings">Settings</string>
-    <string name="settings_coming_soon">Settings will be available in a future update.</string>
+    <string name="settings_subtitle">Customize your notebook and network connection</string>
+    <string name="network">Network</string>
+    <string name="find_or_join_household">Find or Join Household</string>
+    <string name="find_or_join_household_description">Discover and join a NetBook network when you choose.</string>
     <string name="about_me">About Me</string>
     <string name="about_page_subtitle">Shared notes, kept close.</string>
     <string name="contributors">Contributors</string>
     <string name="contributor_neel">Neel</string>
-    <string name="contributors_description">Design and development of SharedNoteBook</string>
+    <string name="contributors_description">Design and development of NetBook</string>
     <string name="app_version">App version</string>
     <string name="version_value">Version %1$s</string>
     <string name="contact_us">Contact us</string>
     <string name="contact_description">Questions, ideas, or feedback? We would love to hear from you.</string>
-    <string name="contact_email_subject">SharedNoteBook feedback</string>
+    <string name="contact_email_subject">NetBook feedback</string>
     <string name="no_email_app">No email app is available on this device.</string>
     <string name="connected_devices">Connected devices</string>
     <string name="connected_devices_subtitle">Devices currently reachable on this network</string>
@@ -54,6 +56,6 @@
         <item quantity="other">%1$d devices found</item>
     </plurals>
     <string name="no_devices_title">No connected devices found</string>
-    <string name="no_devices_body">Make sure your SharedNoteBook devices are awake and connected to the same local network.</string>
-    <string name="device_scan_disclaimer">Only SharedNoteBook devices advertising themselves on this local network can be shown.</string>
+    <string name="no_devices_body">Make sure your NetBook devices are awake and connected to the same local network.</string>
+    <string name="device_scan_disclaimer">Only NetBook devices advertising themselves on this local network can be shown.</string>
 </resources>

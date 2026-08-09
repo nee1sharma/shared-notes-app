@@ -1,5 +1,5 @@
 <resources>
-    <style name="Base.Theme.SharedNoteBook" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.NetBook" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/notebook_primary</item>
         <item name="colorOnPrimary">@color/notebook_on_primary</item>
         <item name="colorPrimaryContainer">@color/notebook_primary_container</item>
@@ -21,5 +21,5 @@
         <item name="android:fontFamily">sans</item>
     </style>
 
-    <style name="Theme.SharedNoteBook" parent="Base.Theme.SharedNoteBook" />
+    <style name="Theme.NetBook" parent="Base.Theme.NetBook" />
 </resources>

@@ -22,5 +22,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "SharedNoteBook"
+rootProject.name = "NetBook"
 include(":app")

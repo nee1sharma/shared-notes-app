@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.hitstudio.apps.sharednotebook"
+    namespace = "com.hitstudio.apps.netbook"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.hitstudio.apps.sharednotebook"
+        applicationId = "com.hitstudio.apps.netbook"
         minSdk = 26
         targetSdk = 35
         versionCode = 1

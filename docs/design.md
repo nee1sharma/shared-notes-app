@@ -1,4 +1,4 @@
-# SharedNoteBook Product and Application Design
+# NetBook Product and Application Design
 
 **Companion specifications:** [requirements.md](requirements.md), [web-design.md](web-design.md)  
 **Document status:** Version 1 Android data plane and laptop control-plane design  
@@ -650,7 +650,7 @@ Suggested Android boundaries:
 
 Required laptop control-plane boundaries:
 
-- Stateful Spring Boot backend and frontend in `/Users/hitstudio/Learnings/shared-notebook`.
+- Stateful Spring Boot backend and frontend in the NetBook companion repository.
 - PostgreSQL as the durable full replica for all shared household data and the authority for policies, roles, registry state, trash, and activity retention.
 - mDNS/DNS-SD discovery advertisement, authenticated direct-address fallback, and heartbeat-based global presence.
 - Responsive browser UI for the six web admin pages.
@@ -864,7 +864,7 @@ The product owner intentionally deferred native Android administration, internet
 
 As of the current build, the following core connectivity features are documented but **not yet implemented** in the Android application:
 
-- **NSD/mDNS Discovery:** The Android app does not yet actively listen for the `_sharednotebook._tcp` service.
+- **NSD/mDNS Discovery:** The Android app does not yet actively listen for the `_netbook._tcp` service.
 - **Heartbeat Mechanism:** The device does not yet send periodic authenticated heartbeats to the laptop backend.
 - **Registration Flow:** The `JoinHouseholdActivity` currently transitions directly to `NotesHomeActivity` without performing a registration handshake.
 
