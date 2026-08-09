@@ -573,11 +573,11 @@ The previously listed questions about native mobile administration, internet-wid
 
 ## 15. Implementation status and technical gaps
 
-As of the current development baseline, the following functional requirements are **not yet implemented** in the Android application:
+The current Android build implements an initial control-plane synchronization slice:
 
-- **FR-004 / FR-064 (Discovery):** Automated LAN discovery via mDNS/DNS-SD is not yet implemented.
-- **FR-142 (Heartbeats):** Authenticated presence heartbeats are not yet sent by the Android client.
-- **FR-050 to FR-063 (Peer Sync):** The peer-to-peer synchronization coordinator and encrypted session logic are in the design phase.
-- **FR-005 to FR-016 (Registration):** The formal identity handshake and registration persistence are bypassed in the current build.
+- **FR-004 / FR-064:** `NsdManager` discovers `_netbook._tcp` and resolves the control-plane host and port.
+- **FR-005 to FR-016:** The join screen submits the installation, member, and device information to the PostgreSQL-backed registry and persists the returned device token locally.
+- **FR-142 / FR-144:** WorkManager submits an authenticated heartbeat immediately after registration/app start and every 15 minutes while network constraints allow. The web dashboard derives `Connected` from a 20-minute heartbeat window.
+- **Shared-note propagation:** A shared save schedules a one-time sync. Sync uploads local shared notes and applies newer revisions downloaded from the control plane; private notes are excluded at the DAO query boundary.
 
-Consequently, the "Connected" status in the web companion's global presence dashboard (FR-144) will remain offline until the discovery and heartbeat mechanisms are completed.
+The remaining gaps are intentional and must not be presented as complete: enrollment is open to the trusted home LAN, the current Android transport is authenticated HTTP rather than TLS, Android-to-Android direct synchronization is not implemented, and the browser marks divergent revisions but does not yet offer a resolution workflow.

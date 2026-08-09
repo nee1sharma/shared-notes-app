@@ -49,6 +49,7 @@
     <string name="connected_devices_subtitle">Devices currently reachable on this network</string>
     <string name="registered_to">Registered to: %1$s</string>
     <string name="not_registered">Not registered to any household</string>
+    <string name="control_plane_found">Control plane found. Join it from Settings to see household devices.</string>
     <string name="refresh">Refresh</string>
     <string name="scanning_network">Scanning your local network…</string>
     <plurals name="devices_found">

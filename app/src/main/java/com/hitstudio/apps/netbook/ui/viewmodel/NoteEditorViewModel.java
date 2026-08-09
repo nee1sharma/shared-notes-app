@@ -11,6 +11,8 @@ import androidx.lifecycle.ViewModel;
 import com.hitstudio.apps.netbook.domain.model.Note;
 import com.hitstudio.apps.netbook.domain.model.NoteVisibility;
 import com.hitstudio.apps.netbook.domain.repository.NoteRepository;
+import com.hitstudio.apps.netbook.data.remote.RegistrationManager;
+import com.hitstudio.apps.netbook.data.remote.SyncScheduler;
 
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
@@ -23,6 +25,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 @HiltViewModel
 public final class NoteEditorViewModel extends ViewModel {
     private final NoteRepository noteRepository;
+    private final RegistrationManager registrationManager;
+    private final SyncScheduler syncScheduler;
     private final String noteId;
     private final MutableLiveData<String> title = new MutableLiveData<>("");
     private final MutableLiveData<String> body = new MutableLiveData<>("");
@@ -35,8 +39,15 @@ public final class NoteEditorViewModel extends ViewModel {
     private Note loadedNote;
 
     @Inject
-    public NoteEditorViewModel(NoteRepository noteRepository, SavedStateHandle savedStateHandle) {
+    public NoteEditorViewModel(
+            NoteRepository noteRepository,
+            RegistrationManager registrationManager,
+            SyncScheduler syncScheduler,
+            SavedStateHandle savedStateHandle
+    ) {
         this.noteRepository = noteRepository;
+        this.registrationManager = registrationManager;
+        this.syncScheduler = syncScheduler;
         this.noteId = savedStateHandle.get("noteId");
         boolean existingNote = noteId != null && !"new".equals(noteId);
         this.loading = new MutableLiveData<>(existingNote);
@@ -85,8 +96,11 @@ public final class NoteEditorViewModel extends ViewModel {
                 currentVisibility,
                 currentTitle,
                 currentBody,
-                loadedNote == null ? "device-1" : loadedNote.getCreatorId(),
+                loadedNote == null
+                        ? valueOrEmpty(registrationManager.getDeviceId())
+                        : loadedNote.getCreatorId(),
                 UUID.randomUUID().toString(),
+                loadedNote == null ? "" : loadedNote.getCurrentRevisionId(),
                 loadedNote == null ? now : loadedNote.getCreatedAt(),
                 now,
                 loadedNote != null && loadedNote.isDeleted()
@@ -100,6 +114,9 @@ public final class NoteEditorViewModel extends ViewModel {
                     noteRepository.updateNote(note);
                 }
                 loadedNote = note;
+                if (note.getVisibility() == NoteVisibility.SHARED) {
+                    syncScheduler.enqueue();
+                }
                 mainHandler.post(onSaved);
             } finally {
                 saving.postValue(false);

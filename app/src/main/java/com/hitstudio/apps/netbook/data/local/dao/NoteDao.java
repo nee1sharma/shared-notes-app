@@ -21,8 +21,14 @@ public interface NoteDao {
     @Query("SELECT * FROM notes WHERE id = :noteId")
     NoteEntity getNoteById(String noteId);
 
+    @Query("SELECT * FROM notes WHERE visibility = 'SHARED'")
+    List<NoteEntity> getSharedNotesForSync();
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertNote(NoteEntity note);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void upsertNotes(List<NoteEntity> notes);
 
     @Update
     void updateNote(NoteEntity note);

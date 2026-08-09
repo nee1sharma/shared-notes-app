@@ -860,24 +860,13 @@ The Spring Boot web repository does not require unit tests under the current pro
 
 The product owner intentionally deferred native Android administration, internet-wide discovery/presence, non-local browser HTTPS, automated key/database recovery, delegated-admin promotion, laptop autostart/standby, and stricter private-delivery targeting. These topics do not block the current design and retain the safe defaults recorded in [requirements.md](requirements.md#14-settled-and-deferred-decisions).
 
-## 14. Current implementation status (Version 1.0)
+## 14. Current implementation status
 
-As of the current build, the following core connectivity features are documented but **not yet implemented** in the Android application:
+The baseline now contains the first working control-plane path. Android discovers `_netbook._tcp` with `NsdManager`, registers an installation with the laptop, stores the returned bearer token, sends immediate and periodic heartbeats, and synchronizes `SHARED` Room records through the laptop API. The connected-devices screen reads the authenticated registry rather than treating discovered mDNS services as devices.
 
-- **NSD/mDNS Discovery:** The Android app does not yet actively listen for the `_netbook._tcp` service.
-- **Heartbeat Mechanism:** The device does not yet send periodic authenticated heartbeats to the laptop backend.
-- **Registration Flow:** The `JoinHouseholdActivity` currently transitions directly to `NotesHomeActivity` without performing a registration handshake.
+### 14.1 Current constraints
 
-### 14.1 Connectivity prerequisites
-
-For the mobile device to appear as "Connected" in the web companion, the following must be implemented and active:
-
-1.  **Permissions:** The Android app must request and be granted:
-    - `android.permission.INTERNET`
-    - `android.permission.ACCESS_WIFI_STATE`
-    - `android.permission.CHANGE_WIFI_MULTICAST_STATE` (for mDNS discovery)
-2.  **Discovery Service:** An Android-side `NsdManager` implementation to resolve the laptop's IP address and port.
-3.  **Authentication:** A completed registration handshake to establish the device's cryptographic identity.
-4.  **Heartbeat Service:** A background task to maintain the `Connected` status in the laptop's global presence directory.
-
-Without these components, the web companion will report "No registered Android apps are connected." even if the app is open and on the same network.
+1. The existing permissions (`INTERNET`, `ACCESS_WIFI_STATE`, and `CHANGE_WIFI_MULTICAST_STATE`) are required for this path.
+2. The laptop must advertise the service and run PostgreSQL; a stopped control plane cannot provide registration, web notes, or global device presence.
+3. Private notes never enter the sync request. The current mobile transport is bearer-authenticated HTTP on the trusted home LAN and must be upgraded to TLS for an untrusted network.
+4. This is laptop-mediated synchronization. Direct Android-to-Android discovery, encrypted peer sessions, registration approval, key exchange, and an Android conflict-resolution screen remain design work.

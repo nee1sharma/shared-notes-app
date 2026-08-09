@@ -50,6 +50,7 @@ public final class NoteRepositoryImpl implements NoteRepository {
                 entity.getBody(),
                 entity.getCreatorId(),
                 entity.getCurrentRevisionId(),
+                entity.getParentRevisionId(),
                 entity.getCreatedAt(),
                 entity.getUpdatedAt(),
                 entity.isDeleted()
@@ -64,6 +65,7 @@ public final class NoteRepositoryImpl implements NoteRepository {
                 note.getBody(),
                 note.getCreatorId(),
                 note.getCurrentRevisionId(),
+                note.getParentRevisionId(),
                 note.getCreatedAt(),
                 note.getUpdatedAt(),
                 note.isDeleted()

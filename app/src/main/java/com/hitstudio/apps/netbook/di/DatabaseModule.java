@@ -28,7 +28,7 @@ public final class DatabaseModule {
                 context,
                 NetBookDatabase.class,
                 "netbook.db"
-        ).build();
+        ).addMigrations(NetBookDatabase.MIGRATION_1_2).build();
     }
 
     @Provides

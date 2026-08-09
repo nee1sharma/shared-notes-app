@@ -59,8 +59,8 @@ public final class HouseholdAdapter extends RecyclerView.Adapter<HouseholdAdapte
         holder.itemView.setOnClickListener(v -> {
             int oldPosition = selectedPosition;
             selectedPosition = holder.getAdapterPosition();
-            notifyItemChanged(oldPosition);
-            notifyItemChanged(selectedPosition);
+            if (oldPosition >= 0) notifyItemChanged(oldPosition);
+            if (selectedPosition >= 0) notifyItemChanged(selectedPosition);
             listener.onServiceClick(service);
         });
     }

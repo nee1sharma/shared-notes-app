@@ -6,6 +6,11 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
+import androidx.work.Constraints;
+import androidx.work.ExistingWorkPolicy;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 
 import java.io.IOException;
 
@@ -29,9 +34,9 @@ public final class HeartbeatWorker extends Worker {
         }
 
         String baseUrl = registrationManager.getControlPlaneUrl();
-        String deviceId = registrationManager.getDeviceId();
+        String authorization = registrationManager.getAuthorization();
 
-        if (baseUrl == null || deviceId == null) {
+        if (baseUrl == null || authorization == null) {
             return Result.failure();
         }
 
@@ -41,14 +46,22 @@ public final class HeartbeatWorker extends Worker {
                 .build();
 
         NetBookApi api = retrofit.create(NetBookApi.class);
-        NetBookApi.HeartbeatRequest request = new NetBookApi.HeartbeatRequest(
-                deviceId, System.currentTimeMillis()
-        );
+        NetBookApi.HeartbeatRequest request = new NetBookApi.HeartbeatRequest(System.currentTimeMillis());
 
         try {
-            Response<Void> response = api.sendHeartbeat(request).execute();
+            Response<Void> response = api.sendHeartbeat(authorization, request).execute();
             if (response.isSuccessful()) {
                 Log.d(TAG, "Heartbeat sent successfully");
+                OneTimeWorkRequest syncRequest = new OneTimeWorkRequest.Builder(SyncWorker.class)
+                        .setConstraints(new Constraints.Builder()
+                                .setRequiredNetworkType(NetworkType.CONNECTED)
+                                .build())
+                        .build();
+                WorkManager.getInstance(getApplicationContext()).enqueueUniqueWork(
+                        "SharedNotesSync",
+                        ExistingWorkPolicy.KEEP,
+                        syncRequest
+                );
                 return Result.success();
             } else {
                 Log.e(TAG, "Heartbeat failed: " + response.code());

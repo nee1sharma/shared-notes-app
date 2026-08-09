@@ -19,6 +19,8 @@ public final class NoteEntity {
     private final String creatorId;
     @NonNull
     private final String currentRevisionId;
+    @NonNull
+    private final String parentRevisionId;
     private final long createdAt;
     private final long updatedAt;
     private final boolean isDeleted;
@@ -30,6 +32,7 @@ public final class NoteEntity {
             @NonNull String body,
             @NonNull String creatorId,
             @NonNull String currentRevisionId,
+            @NonNull String parentRevisionId,
             long createdAt,
             long updatedAt,
             boolean isDeleted
@@ -40,6 +43,7 @@ public final class NoteEntity {
         this.body = body;
         this.creatorId = creatorId;
         this.currentRevisionId = currentRevisionId;
+        this.parentRevisionId = parentRevisionId;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.isDeleted = isDeleted;
@@ -51,6 +55,7 @@ public final class NoteEntity {
     @NonNull public String getBody() { return body; }
     @NonNull public String getCreatorId() { return creatorId; }
     @NonNull public String getCurrentRevisionId() { return currentRevisionId; }
+    @NonNull public String getParentRevisionId() { return parentRevisionId; }
     public long getCreatedAt() { return createdAt; }
     public long getUpdatedAt() { return updatedAt; }
     public boolean isDeleted() { return isDeleted; }

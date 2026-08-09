@@ -1,22 +1,22 @@
 # NetBook (Android App)
 
-NetBook is a secure, peer-to-peer note-taking system for people on the same local network, designed to prioritize user privacy and familiar note-editing experiences. This repository contains the Android application, which works in conjunction with a designated laptop control plane.
+NetBook is a local-first note-taking system for people on the same local network. This repository contains the Android application, which synchronizes shared notes through the designated laptop control plane.
 
 ## Key Features
 
 - **Private & Shared Notes:** Clearly distinguish between personal notes kept on your device and notes shared within your household.
-- **Peer-to-Peer Synchronization:** Synchronize notes directly between Android devices on the same local network using mDNS discovery.
-- **Security & Privacy:** Local and network data are encrypted.
-- **Offline-First Design:** Create and edit notes even when the control plane is unavailable; changes sync once connectivity is restored.
-- **Conflict Resolution:** Gracefully handles concurrent offline edits with a dedicated reconciliation interface.
+- **Household Synchronization:** Shared notes upload to and download from the laptop PostgreSQL replica. Private notes are never sent.
+- **Device Registry:** NSD/mDNS finds the laptop control plane; registration yields a device token used for heartbeats, the device list, and sync.
+- **Offline-first editing:** Notes remain editable while the laptop is unavailable and shared changes retry through WorkManager.
+- **Conflict marker:** Divergent shared revisions are retained by the control plane and marked in the browser. A mobile conflict-resolution interface is still pending.
 
 ## App Architecture & Tech Stack
 
 - **UI:** Built in **Java** with Material Components, Android XML layouts, and RecyclerView.
 - **Dependency Injection:** Uses **Hilt** for a robust and testable architecture.
-- **Local Storage:** Uses **Room** with SQLCipher for encrypted local persistence.
-- **Discovery (Planned):** Automated local network service discovery using NSD/mDNS is currently in development.
-- **Background Work (Planned):** Periodic reconciliation via WorkManager is planned for a future update.
+- **Local Storage:** Uses **Room** for device-local notes.
+- **Discovery:** Uses Android NSD/mDNS to resolve the `_netbook._tcp` control-plane service.
+- **Background Work:** Uses WorkManager for immediate shared-note sync and periodic presence heartbeats.
 
 ## Getting Started
 
@@ -26,12 +26,11 @@ The Android app requires a running NetBook Control Plane on your local network t
 
 ### 2. Install and Register the App
 - Deploy the Android application to your device.
-- Upon first launch, the app will automatically search for your household on the local network.
-- Follow the on-screen instructions to register your device.
+- Open **Settings → Find or Join Household**, choose the discovered control plane, and follow the registration prompt.
 
 ### 3. Start Notetaking
 - **Private Notes:** Stored only on your device, protected by local encryption.
-- **Shared Notes:** Automatically sync with other registered devices in your household.
+- **Shared Notes:** Sync through the registered control plane after saving, at app launch, and when background work runs.
 
 ## Build & Deployment
 
@@ -61,8 +60,8 @@ This repository is configured with GitHub Actions to automate the build and rele
 
 This project is configured to avoid pushing sensitive data to version control:
 - `local.properties` and keystore files (`*.jks`, `*.keystore`) are ignored.
-- Database content and network communication are encrypted.
+- Shared note payloads are encrypted at rest by the laptop control plane. The current Android control-plane transport is authenticated HTTP on a trusted home LAN; do not use it on an untrusted network until TLS is configured.
 - No sensitive keys or email addresses are stored in the clear.
 
 ## Documentation
-For detailed app design specifications and architecture diagrams, please refer to the [docs/design.md](docs/design.md) file.
+The detailed design documents describe the target architecture. The implemented connection scope and current limitations are recorded in [docs/requirements.md](docs/requirements.md).

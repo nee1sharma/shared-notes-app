@@ -5,7 +5,9 @@ import android.content.SharedPreferences;
 import android.os.Build;
 
 import androidx.work.Constraints;
+import androidx.work.ExistingWorkPolicy;
 import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.OneTimeWorkRequest;
 import androidx.work.NetworkType;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
@@ -31,6 +33,9 @@ public final class RegistrationManager {
     private static final String KEY_HOUSEHOLD_ID = "household_id";
     private static final String KEY_CONTROL_PLANE_URL = "control_plane_url";
     private static final String KEY_REGISTERED = "is_registered";
+    private static final String KEY_ACCESS_TOKEN = "access_token";
+    private static final String KEY_INSTALLATION_ID = "installation_id";
+    private static final String KEY_LAST_SYNC_AT = "last_sync_at";
 
     private final SharedPreferences prefs;
 
@@ -54,6 +59,19 @@ public final class RegistrationManager {
         return prefs.getString(KEY_CONTROL_PLANE_URL, null);
     }
 
+    public String getAuthorization() {
+        String token = prefs.getString(KEY_ACCESS_TOKEN, null);
+        return token == null || token.isEmpty() ? null : "Bearer " + token;
+    }
+
+    public long getLastSynchronizedAt() {
+        return prefs.getLong(KEY_LAST_SYNC_AT, 0L);
+    }
+
+    public void setLastSynchronizedAt(long timestamp) {
+        prefs.edit().putLong(KEY_LAST_SYNC_AT, timestamp).apply();
+    }
+
     public void scheduleHeartbeat() {
         Constraints constraints = new Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -69,10 +87,30 @@ public final class RegistrationManager {
                 ExistingPeriodicWorkPolicy.KEEP,
                 heartbeatRequest
         );
+
+        OneTimeWorkRequest immediateHeartbeat = new OneTimeWorkRequest.Builder(HeartbeatWorker.class)
+                .setConstraints(constraints)
+                .build();
+        WorkManager.getInstance(context).enqueueUniqueWork(
+                "ImmediateHeartbeat",
+                ExistingWorkPolicy.REPLACE,
+                immediateHeartbeat
+        );
+
+        OneTimeWorkRequest initialSync = new OneTimeWorkRequest.Builder(SyncWorker.class)
+                .setConstraints(constraints)
+                .build();
+        WorkManager.getInstance(context).enqueueUniqueWork(
+                "SharedNotesSync",
+                ExistingWorkPolicy.KEEP,
+                initialSync
+        );
     }
 
     public void register(HouseholdService service, String memberName, String email, RegistrationCallback callback) {
-        String baseUrl = "http://" + service.getHost() + ":" + service.getPort() + "/";
+        String host = service.getHost();
+        String baseUrl = "http://" + (host.contains(":") ? "[" + host + "]" : host)
+                + ":" + service.getPort() + "/";
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -80,10 +118,18 @@ public final class RegistrationManager {
 
         NetBookApi api = retrofit.create(NetBookApi.class);
         String deviceName = Build.MANUFACTURER + " " + Build.MODEL;
-        String publicKey = "dummy-public-key"; // Cryptographic identity planned for future
+        String installationId = getOrCreateInstallationId();
+        String publicKey = "installation:" + installationId;
 
         NetBookApi.RegistrationRequest request = new NetBookApi.RegistrationRequest(
-                memberName, deviceName, email, publicKey
+                installationId,
+                memberName,
+                deviceName,
+                email,
+                publicKey,
+                "NetBook Android",
+                deviceName,
+                "ANDROID"
         );
 
         api.requestRegistration(request).enqueue(new Callback<NetBookApi.RegistrationResponse>() {
@@ -96,6 +142,7 @@ public final class RegistrationManager {
                                 .putString(KEY_DEVICE_ID, regResponse.deviceId)
                                 .putString(KEY_HOUSEHOLD_ID, regResponse.householdId)
                                 .putString(KEY_CONTROL_PLANE_URL, baseUrl)
+                                .putString(KEY_ACCESS_TOKEN, regResponse.accessToken)
                                 .putBoolean(KEY_REGISTERED, true)
                                 .apply();
                         scheduleHeartbeat();
@@ -117,9 +164,54 @@ public final class RegistrationManager {
         });
     }
 
+    public void loadConnectedDevices(DeviceListCallback callback) {
+        String baseUrl = getControlPlaneUrl();
+        String authorization = getAuthorization();
+        if (!isRegistered() || baseUrl == null || authorization == null) {
+            callback.onError("Register this device to see household devices.");
+            return;
+        }
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        retrofit.create(NetBookApi.class).getDevices(authorization).enqueue(new Callback<java.util.List<NetBookApi.DeviceView>>() {
+            @Override
+            public void onResponse(
+                    Call<java.util.List<NetBookApi.DeviceView>> call,
+                    Response<java.util.List<NetBookApi.DeviceView>> response
+            ) {
+                if (response.isSuccessful() && response.body() != null) {
+                    callback.onSuccess(response.body());
+                } else {
+                    callback.onError("Unable to load household devices.");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<java.util.List<NetBookApi.DeviceView>> call, Throwable throwable) {
+                callback.onError(throwable.getMessage() == null ? "Unable to reach the control plane." : throwable.getMessage());
+            }
+        });
+    }
+
+    private String getOrCreateInstallationId() {
+        String existing = prefs.getString(KEY_INSTALLATION_ID, null);
+        if (existing != null && !existing.isEmpty()) return existing;
+        String created = java.util.UUID.randomUUID().toString();
+        prefs.edit().putString(KEY_INSTALLATION_ID, created).apply();
+        return created;
+    }
+
     public interface RegistrationCallback {
         void onSuccess();
         void onPending();
+        void onError(String message);
+    }
+
+    public interface DeviceListCallback {
+        void onSuccess(java.util.List<NetBookApi.DeviceView> devices);
         void onError(String message);
     }
 }

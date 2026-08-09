@@ -9,6 +9,7 @@ public final class Note {
     private final String body;
     private final String creatorId;
     private final String currentRevisionId;
+    private final String parentRevisionId;
     private final long createdAt;
     private final long updatedAt;
     private final boolean deleted;
@@ -20,6 +21,7 @@ public final class Note {
             String body,
             String creatorId,
             String currentRevisionId,
+            String parentRevisionId,
             long createdAt,
             long updatedAt,
             boolean deleted
@@ -30,6 +32,7 @@ public final class Note {
         this.body = body;
         this.creatorId = creatorId;
         this.currentRevisionId = currentRevisionId;
+        this.parentRevisionId = parentRevisionId;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.deleted = deleted;
@@ -41,6 +44,7 @@ public final class Note {
     public String getBody() { return body; }
     public String getCreatorId() { return creatorId; }
     public String getCurrentRevisionId() { return currentRevisionId; }
+    public String getParentRevisionId() { return parentRevisionId; }
     public long getCreatedAt() { return createdAt; }
     public long getUpdatedAt() { return updatedAt; }
     public boolean isDeleted() { return deleted; }
@@ -58,12 +62,13 @@ public final class Note {
                 && Objects.equals(title, note.title)
                 && Objects.equals(body, note.body)
                 && Objects.equals(creatorId, note.creatorId)
-                && Objects.equals(currentRevisionId, note.currentRevisionId);
+                && Objects.equals(currentRevisionId, note.currentRevisionId)
+                && Objects.equals(parentRevisionId, note.parentRevisionId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, visibility, title, body, creatorId, currentRevisionId,
+        return Objects.hash(id, visibility, title, body, creatorId, currentRevisionId, parentRevisionId,
                 createdAt, updatedAt, deleted);
     }
 }
