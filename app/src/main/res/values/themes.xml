@@ -1,8 +1,24 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+<resources>
     <style name="Base.Theme.SharedNoteBook" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/notebook_primary</item>
+        <item name="colorOnPrimary">@color/notebook_on_primary</item>
+        <item name="colorPrimaryContainer">@color/notebook_primary_container</item>
+        <item name="colorOnPrimaryContainer">@color/notebook_on_primary_container</item>
+        <item name="colorSecondary">@color/notebook_secondary</item>
+        <item name="colorSecondaryContainer">@color/notebook_secondary_container</item>
+        <item name="colorOnSecondaryContainer">@color/notebook_on_secondary_container</item>
+        <item name="colorTertiary">@color/notebook_tertiary</item>
+        <item name="colorTertiaryContainer">@color/notebook_tertiary_container</item>
+        <item name="colorOnTertiaryContainer">@color/notebook_on_tertiary_container</item>
+        <item name="android:colorBackground">@color/notebook_background</item>
+        <item name="colorSurface">@color/notebook_background</item>
+        <item name="colorOnSurface">@color/notebook_on_surface</item>
+        <item name="colorOnSurfaceVariant">@color/notebook_on_surface_variant</item>
+        <item name="colorOutline">@color/notebook_outline</item>
+        <item name="android:statusBarColor">@color/notebook_surface_low</item>
+        <item name="android:navigationBarColor">@color/notebook_background</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:fontFamily">sans</item>
     </style>
 
     <style name="Theme.SharedNoteBook" parent="Base.Theme.SharedNoteBook" />

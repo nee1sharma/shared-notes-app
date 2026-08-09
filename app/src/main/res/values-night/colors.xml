@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="notebook_primary">#83D2E1</color>
+    <color name="notebook_on_primary">#00363D</color>
+    <color name="notebook_primary_container">#164E57</color>
+    <color name="notebook_on_primary_container">#A6EEFA</color>
+    <color name="notebook_secondary">#C3C8BE</color>
+    <color name="notebook_secondary_container">#424840</color>
+    <color name="notebook_on_secondary_container">#DFE4D9</color>
+    <color name="notebook_tertiary">#F5C451</color>
+    <color name="notebook_tertiary_container">#5D4200</color>
+    <color name="notebook_on_tertiary_container">#FFFFDEA1</color>
+    <color name="notebook_background">#FF141315</color>
+    <color name="notebook_surface_low">#FF1D1B20</color>
+    <color name="notebook_surface_highest">#FF363438</color>
+    <color name="notebook_on_surface">#FFE7E1E5</color>
+    <color name="notebook_on_surface_variant">#FFCAC4D0</color>
+    <color name="notebook_outline">#FF948F99</color>
+</resources>

@@ -1,3 +1,30 @@
 <resources>
     <string name="app_name">SharedNoteBook</string>
+    <string name="enter">Enter</string>
+    <string name="my_notes">My notes</string>
+    <string name="note_count">%1$d %2$s</string>
+    <string name="note_singular">note</string>
+    <string name="note_plural">notes</string>
+    <string name="search_notes">Search your notes</string>
+    <string name="filter_all">All</string>
+    <string name="filter_private">Private</string>
+    <string name="filter_shared">Shared</string>
+    <string name="new_note">New note</string>
+    <string name="title_hint">Title</string>
+    <string name="body_hint">Note</string>
+    <string name="back">Back</string>
+    <string name="save_note">Save note</string>
+    <string name="edit_note">Edit note</string>
+    <string name="untitled_note">Untitled note</string>
+    <string name="untitled">Untitled</string>
+    <string name="empty_note">Empty note</string>
+    <string name="edited_at">Edited %1$s</string>
+    <string name="empty_notebook_title">Your notebook is empty</string>
+    <string name="empty_notebook_body">Tap + to write your first note.</string>
+    <string name="empty_filter_title">Nothing in this section</string>
+    <string name="empty_filter_body">Choose another filter to see your notes.</string>
+    <string name="empty_search_title">No matching notes</string>
+    <string name="empty_search_body">Try a different word or filter.</string>
+    <string name="join_household_title">Find or Join Household</string>
+    <string name="join_household">Join Household</string>
 </resources>

@@ -106,6 +106,7 @@ No household-wide audit event is created for app unlock attempts. Those attempts
 - “Set up the household on a laptop” help action when no discovery service exists.
 - Current network name when Android permits access to it.
 - Discovery status and list of discovered household identities.
+- **Required permissions for discovery:** `android.permission.INTERNET`, `android.permission.ACCESS_WIFI_STATE`, and `android.permission.CHANGE_WIFI_MULTICAST_STATE`.
 - Current enrollment mode: `Open registration` or `Admin approval required`.
 - In open mode, explanation that no admin approval is required and warning that any person allowed onto the home LAN may be able to register.
 - In approval-required mode, explanation that the device will remain pending until an admin acts.
@@ -305,7 +306,7 @@ Shared profile or device-name changes produce the applicable admin-visible event
 
 ## 5. Web companion admin-only page summary
 
-The complete member and admin web experience is specified in [web-design.md](web-design.md). The following summary records the admin-only surfaces that must never be implemented as an Android route, activity, fragment, Compose destination, or hidden feature flag. Android peers may apply authenticated changes created by these pages, but cannot initiate them through Android UI.
+The complete member and admin web experience is specified in [web-design.md](web-design.md). The following summary records the admin-only surfaces that must never be implemented as an Android route, activity, fragment, navigation destination, or hidden feature flag. Android peers may apply authenticated changes created by these pages, but cannot initiate them through Android UI.
 
 ### 5.1 Admin authentication and reauthentication page
 
@@ -384,11 +385,15 @@ Approval creates `DEVICE_REGISTRATION_APPROVED`; completed registration creates 
 
 - Member name and role.
 - Device name and stable short device identifier.
+- Registered member name, application name, platform, and Android manufacturer/model from the authenticated device record.
 - Registered time.
 - Reachable/offline status.
 - Last seen and last successful sync.
+- Connection start and latest authenticated heartbeat when currently connected.
 - Latest authenticated heartbeat and discovery-service observation time.
 - Blocked or revoked badge.
+
+The page never invents friendly-looking devices or activity. Until a real Android registration or heartbeat is received, the UI shows an explicit empty or offline state.
 
 **Device detail:**
 
@@ -577,7 +582,7 @@ Email addresses, encryption keys, note bodies, and complete old note content nev
 
 - Connection events are per authenticated session, not per discovery packet.
 - Presence heartbeats do not each create activity; only a derived online/offline/status transition creates `DEVICE_PRESENCE_CHANGED`.
-- `SHARED_NOTE_OPENED` is created once when the full note is opened, not for list previews or every recomposition.
+- `SHARED_NOTE_OPENED` is created once when the full note is opened, not for list previews or every view rebind.
 - `SHARED_NOTE_SYNCED` is recorded when a new current revision is accepted, not for duplicate/retry payloads.
 - A clean sync with no changed objects creates session start/completion events but no note-transfer events.
 - Admin session events are created per authenticated browser session, not per web request.
@@ -597,7 +602,7 @@ Audit events are authenticated reports from cooperating app installations. They 
 ```mermaid
 flowchart LR
     subgraph Android["Registered Android peer"]
-        UI["Jetpack Compose member UI"] --> VM["Member view models / use cases"]
+        UI["Java and XML member UI"] --> VM["Member view models / use cases"]
         VM --> Notes["Note repository"]
         VM --> Sync["Synchronization coordinator"]
         VM --> Audit["Encrypted audit-event recorder"]
@@ -631,7 +636,7 @@ flowchart LR
 
 Suggested Android boundaries:
 
-- Jetpack Compose pages and navigation.
+- Java activities, XML layouts, Material Components, and RecyclerView-based navigation.
 - View models exposing immutable UI state.
 - Use cases for note saves, private/shared copying, conflict resolution, registration, and member profile changes.
 - No admin routes or view models exposed through the Android application UI.
@@ -855,4 +860,24 @@ The Spring Boot web repository does not require unit tests under the current pro
 
 The product owner intentionally deferred native Android administration, internet-wide discovery/presence, non-local browser HTTPS, automated key/database recovery, delegated-admin promotion, laptop autostart/standby, and stricter private-delivery targeting. These topics do not block the current design and retain the safe defaults recorded in [requirements.md](requirements.md#14-settled-and-deferred-decisions).
 
-The accepted version 1 enrollment tradeoff is explicit: a new device on the configured home Wi-Fi may register in open mode without a code or approval. The admin can change the household to approval-required mode when Wi-Fi presence alone is not an acceptable trust boundary.
+## 14. Current implementation status (Version 1.0)
+
+As of the current build, the following core connectivity features are documented but **not yet implemented** in the Android application:
+
+- **NSD/mDNS Discovery:** The Android app does not yet actively listen for the `_sharednotebook._tcp` service.
+- **Heartbeat Mechanism:** The device does not yet send periodic authenticated heartbeats to the laptop backend.
+- **Registration Flow:** The `JoinHouseholdActivity` currently transitions directly to `NotesHomeActivity` without performing a registration handshake.
+
+### 14.1 Connectivity prerequisites
+
+For the mobile device to appear as "Connected" in the web companion, the following must be implemented and active:
+
+1.  **Permissions:** The Android app must request and be granted:
+    - `android.permission.INTERNET`
+    - `android.permission.ACCESS_WIFI_STATE`
+    - `android.permission.CHANGE_WIFI_MULTICAST_STATE` (for mDNS discovery)
+2.  **Discovery Service:** An Android-side `NsdManager` implementation to resolve the laptop's IP address and port.
+3.  **Authentication:** A completed registration handshake to establish the device's cryptographic identity.
+4.  **Heartbeat Service:** A background task to maintain the `Connected` status in the laptop's global presence directory.
+
+Without these components, the web companion will report "No registered Android apps are connected." even if the app is open and on the same network.

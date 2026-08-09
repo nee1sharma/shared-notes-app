@@ -12,11 +12,11 @@ SharedNoteBook is a secure, peer-to-peer note-taking system designed to prioriti
 
 ## App Architecture & Tech Stack
 
-- **UI:** Built with **Jetpack Compose** for a modern, reactive interface.
+- **UI:** Built in **Java** with Material Components, Android XML layouts, and RecyclerView.
 - **Dependency Injection:** Uses **Hilt** for a robust and testable architecture.
 - **Local Storage:** Uses **Room** with SQLCipher for encrypted local persistence.
-- **Discovery:** Implements **NSD/mDNS** for automated local network service discovery.
-- **Background Work:** Uses **WorkManager** for reliable synchronization.
+- **Discovery (Planned):** Automated local network service discovery using NSD/mDNS is currently in development.
+- **Background Work (Planned):** Periodic reconciliation via WorkManager is planned for a future update.
 
 ## Getting Started
 

@@ -22,6 +22,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.screens.NotesHomeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.screens.NoteEditorActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.screens.JoinHouseholdActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

@@ -2,5 +2,21 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="ic_launcher_background">#6650a4</color>
+    <color name="ic_launcher_background">#6650A4</color>
+    <color name="notebook_primary">#386A74</color>
+    <color name="notebook_on_primary">#FFFFFFFF</color>
+    <color name="notebook_primary_container">#BCEBF4</color>
+    <color name="notebook_on_primary_container">#002F36</color>
+    <color name="notebook_secondary">#5D625A</color>
+    <color name="notebook_secondary_container">#E1E7DD</color>
+    <color name="notebook_on_secondary_container">#1A1F1A</color>
+    <color name="notebook_tertiary">#7A5700</color>
+    <color name="notebook_tertiary_container">#FFFFDEA1</color>
+    <color name="notebook_on_tertiary_container">#261A00</color>
+    <color name="notebook_background">#FFFFFBFE</color>
+    <color name="notebook_surface_low">#FFF8F2F6</color>
+    <color name="notebook_surface_highest">#FFE6E0E4</color>
+    <color name="notebook_on_surface">#FF1D1B20</color>
+    <color name="notebook_on_surface_variant">#FF49454F</color>
+    <color name="notebook_outline">#FF79747E</color>
 </resources>

@@ -213,6 +213,9 @@ Attachments, drawing, audio, video, and rich-text collaboration are outside the 
 
 - **FR-080:** The web companion's admin area shall have a page listing all household devices and their registration state.
 - **FR-081:** For each device, the admin page shall show member name, device name, role, registration time, last-seen time, and reachable/offline/blocked/revoked state when known.
+- **FR-081A:** Android device identity shall come from authenticated registration and shall include the registered member name, editable device name, application name `SharedNoteBook Android`, manufacturer/model, platform, and stable short identifier.
+- **FR-081B:** A device shall be presented as connected only while its latest authenticated presence is inside the configured heartbeat window; otherwise it shall be offline with its last-seen time.
+- **FR-081C:** Neither Android nor web builds shall seed or display fabricated household devices, member names, activity, note records, or presence counts.
 - **FR-082:** An authenticated web admin shall be able to view recent shared-note access and synchronization activity attributable to a device.
 - **FR-083:** Blocking a device shall deny synchronization until it is unblocked.
 - **FR-084:** Revoking a device shall permanently remove its eligibility to receive subsequent household updates unless it registers again as a new identity on the home LAN.
@@ -567,3 +570,14 @@ The following decisions are settled:
 - Search filters include title, creator, last editor, modified-date range, and conflict state. Filtering is performed over authorized decrypted data in backend memory without a plaintext PostgreSQL search index.
 
 The previously listed questions about native mobile administration, internet-wide presence, non-local browser HTTPS, key/database recovery, delegated-admin promotion, laptop autostart/standby, and offline private-delivery targeting are intentionally deferred and do not block the current design. Existing safe defaults remain in force: administration stays web-only, presence is limited to devices reporting to the laptop, LAN web access is disabled, delegated admins cannot grant admin by default, and private-delivery jobs may remain pending.
+
+## 15. Implementation status and technical gaps
+
+As of the current development baseline, the following functional requirements are **not yet implemented** in the Android application:
+
+- **FR-004 / FR-064 (Discovery):** Automated LAN discovery via mDNS/DNS-SD is not yet implemented.
+- **FR-142 (Heartbeats):** Authenticated presence heartbeats are not yet sent by the Android client.
+- **FR-050 to FR-063 (Peer Sync):** The peer-to-peer synchronization coordinator and encrypted session logic are in the design phase.
+- **FR-005 to FR-016 (Registration):** The formal identity handshake and registration persistence are bypassed in the current build.
+
+Consequently, the "Connected" status in the web companion's global presence dashboard (FR-144) will remain offline until the discovery and heartbeat mechanisms are completed.
