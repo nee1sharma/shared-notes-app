@@ -10,11 +10,16 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.activity.OnBackPressedCallback;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.hitstudio.apps.sharednotebook.R;
 import com.hitstudio.apps.sharednotebook.ui.adapter.NoteAdapter;
 import com.hitstudio.apps.sharednotebook.ui.navigation.Screen;
@@ -25,6 +30,8 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public final class NotesHomeActivity extends AppCompatActivity {
     private NoteAdapter adapter;
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
     private TextView noteCount;
     private View emptyState;
     private TextView emptyTitle;
@@ -34,6 +41,50 @@ public final class NotesHomeActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notes_home);
+
+        drawerLayout = findViewById(R.id.drawer_layout);
+        findViewById(R.id.open_drawer_button).setOnClickListener(
+                view -> drawerLayout.openDrawer(GravityCompat.START)
+        );
+
+        navigationView = findViewById(R.id.navigation_view);
+        navigationView.setNavigationItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.nav_connected_devices) {
+                drawerLayout.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(this, ConnectedDevicesActivity.class));
+                return true;
+            }
+            if (itemId == R.id.nav_settings) {
+                drawerLayout.closeDrawer(GravityCompat.START);
+                navigationView.setCheckedItem(R.id.nav_notes);
+                Snackbar.make(
+                        findViewById(R.id.drawer_layout),
+                        R.string.settings_coming_soon,
+                        Snackbar.LENGTH_SHORT
+                ).show();
+                return true;
+            }
+            if (itemId == R.id.nav_about_me) {
+                drawerLayout.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(this, AboutMeActivity.class));
+                return true;
+            }
+            drawerLayout.closeDrawer(GravityCompat.START);
+            return true;
+        });
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                } else {
+                    setEnabled(false);
+                    getOnBackPressedDispatcher().onBackPressed();
+                }
+            }
+        });
 
         noteCount = findViewById(R.id.note_count);
         emptyState = findViewById(R.id.empty_state);
@@ -79,6 +130,14 @@ public final class NotesHomeActivity extends AppCompatActivity {
             ));
             updateEmptyState();
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (navigationView != null) {
+            navigationView.setCheckedItem(R.id.nav_notes);
+        }
     }
 
     private void openEditor(String noteId) {

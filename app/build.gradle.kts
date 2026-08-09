@@ -46,6 +46,11 @@ dependencies {
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.recyclerview)
+    implementation(libs.androidx.drawerlayout)
+    implementation(libs.okhttp)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.gson)
+    implementation(libs.androidx.work)
     
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
